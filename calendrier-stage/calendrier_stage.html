@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendrier Interactif PFMP - Blocs Continus</title>
+    <style>
+        :root {
+            --bg-color: #f4f0eb;
+            --text-color: #000000;
+            --border-color: #000000;
+            --card-bg: #ffffff;
+            --header-bg: #e8e8e8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- Conteneur de l'en-tête et Logo --- */
+        .header-container {
+            position: relative;
+            width: 100%;
+            max-width: 1400px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: 0; /* Aligné par le conteneur */
+            text-align: center;
+        }
+
+        .logo-top-left {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            max-height: 80px;
+            width: auto;
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+            max-width: 1400px;
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        /* --- Panneau des calques (Filtres) --- */
+        .filters {
+            flex: 1;
+            min-width: 220px;
+            background: var(--card-bg);
+            border: 3px solid var(--border-color);
+            border-radius: 0px;
+            padding: 20px;
+            box-shadow: 6px 6px 0px var(--border-color);
+            position: sticky;
+            top: 20px;
+        }
+
+        .filters h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            border-bottom: 3px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .filter-label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+        }
+
+        .filter-label input {
+            margin-right: 12px;
+            width: 22px;
+            height: 22px;
+            accent-color: var(--border-color);
+            cursor: pointer;
+            border: 2px solid var(--border-color);
+        }
+
+        /* --- Zone Calendrier --- */
+        .calendar-wrapper {
+            flex: 4;
+            min-width: 700px;
+            background: var(--card-bg);
+            border: 3px solid var(--border-color);
+            box-shadow: 6px 6px 0px var(--border-color);
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: var(--header-bg);
+            border-bottom: 3px solid var(--border-color);
+        }
+
+        .calendar-header button {
+            background: #fff;
+            border: 3px solid var(--border-color);
+            padding: 8px 16px;
+            font-weight: 800;
+            font-size: 1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px var(--border-color);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .calendar-header button:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0px 0px 0px var(--border-color);
+        }
+
+        .calendar-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        /* --- Grille des jours --- */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+
+        #days-header {
+            border-bottom: 3px solid var(--border-color);
+        }
+
+        .day-name {
+            font-weight: 900;
+            text-align: center;
+            padding: 12px 0;
+            background-color: var(--header-bg);
+            border-right: 3px solid var(--border-color);
+            text-transform: uppercase;
+        }
+
+        .day-name:last-child {
+            border-right: none;
+        }
+
+        .day-box {
+            min-height: 140px;
+            border-right: 3px solid var(--border-color);
+            border-bottom: 3px solid var(--border-color);
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            padding-top: 30px;
+            position: relative;
+        }
+
+        .day-box:nth-child(7n) {
+            border-right: none;
+        }
+
+        .day-box.empty {
+            background-color: #f0f0f0;
+            background-image: repeating-linear-gradient(45deg, #e0e0e0 0, #e0e0e0 2px, transparent 2px, transparent 8px);
+        }
+
+        .date-number {
+            font-weight: 900;
+            font-size: 1.2rem;
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            color: #111;
+        }
+
+        /* --- Blocs continus des stages --- */
+        .event-bar {
+            height: 24px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #000;
+            overflow: hidden;
+            white-space: nowrap;
+            border-top: 2px solid var(--border-color);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .event-start {
+            margin-left: 5px;
+            border-left: 2px solid var(--border-color);
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+            padding-left: 8px;
+        }
+
+        .event-middle {
+            border-left: none;
+            border-right: none;
+        }
+
+        .event-end {
+            margin-right: 5px;
+            border-right: 2px solid var(--border-color);
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+        }
+
+        .event-text {
+            padding-left: 8px;
+        }
+
+        /* Palette de couleurs */
+        .color-0 { background-color: #FF5252; }
+        .color-1 { background-color: #448AFF; }
+        .color-2 { background-color: #FFEB3B; }
+        .color-3 { background-color: #69F0AE; }
+        .color-4 { background-color: #E040FB; }
+        .color-5 { background-color: #FF9800; }
+        .color-6 { background-color: #18FFFF; }
+        .color-7 { background-color: #F48FB1; }
+
+        @media (max-width: 1000px) {
+            .container { flex-direction: column; }
+            .calendar-wrapper { min-width: 100%; }
+            .header-container {
+                flex-direction: column;
+            }
+            .logo-top-left {
+                position: relative;
+                top: 0;
+                transform: none;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <img src="cropped-cropped-hbjb.png" alt="Logo" class="logo-top-left">
+        <h1>Planning de PFMP 2026-2027</h1>
+    </div>
+
+    <div class="container">
+        <div class="filters">
+            <h2>Formations</h2>
+            <div id="filter-container"></div>
+        </div>
+
+        <div class="calendar-wrapper">
+            <div class="calendar-header">
+                <button id="prev-month">&laquo; Précédent</button>
+                <h2 id="month-display">Septembre 2026</h2>
+                <button id="next-month">Suivant &raquo;</button>
+            </div>
+            
+            <div class="calendar-grid" id="days-header">
+                <div class="day-name">Lun</div>
+                <div class="day-name">Mar</div>
+                <div class="day-name">Mer</div>
+                <div class="day-name">Jeu</div>
+                <div class="day-name">Ven</div>
+                <div class="day-name">Sam</div>
+                <div class="day-name">Dim</div>
+            </div>
+
+            <div class="calendar-grid" id="calendar-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        const pfmpData = [
+            { classe: "T CIEL", debut: "2026-09-28", fin: "2026-10-18" },
+            { classe: "T MELEC", debut: "2026-09-28", fin: "2026-10-18" },
+            { classe: "T MCC Gr1", debut: "2026-09-28", fin: "2026-10-18" },
+            { classe: "T PLP/MSPC", debut: "2026-09-28", fin: "2026-10-18" },
+            { classe: "2 MCC Gr2", debut: "2026-11-02", fin: "2026-11-22" },
+            { classe: "1 CIEL", debut: "2026-11-09", fin: "2026-11-29" },
+            { classe: "1 PLP/MSPC", debut: "2026-11-09", fin: "2026-11-22" },
+            { classe: "T MCC", debut: "2026-11-30", fin: "2026-12-20" },
+            { classe: "T CIEL", debut: "2026-11-30", fin: "2026-12-20" },
+            { classe: "T MELEC", debut: "2026-11-30", fin: "2026-12-20" },
+            { classe: "T PLP/MSPC", debut: "2026-11-30", fin: "2026-12-20" },
+            { classe: "2 TNE 1", debut: "2027-01-25", fin: "2027-02-07" },
+            { classe: "2 MCC Gr1", debut: "2027-01-04", fin: "2027-01-17" },
+            { classe: "2 MCC Gr2", debut: "2027-01-18", fin: "2027-01-31" },
+            { classe: "1 MELEC Gr1", debut: "2027-01-11", fin: "2027-01-31" },
+            { classe: "1 MCC Gr1", debut: "2027-01-25", fin: "2027-02-21" },
+            { classe: "1 MELEC Gr2", debut: "2027-02-01", fin: "2027-02-21" },
+            { classe: "2 MPMIA", debut: "2027-02-01", fin: "2027-01-14" },
+            { classe: "2 TNE 2", debut: "2027-03-08", fin: "2027-03-21" },
+            { classe: "2 TNE 3", debut: "2027-03-08", fin: "2027-03-21" },
+            { classe: "1 MCC Gr2", debut: "2027-03-08", fin: "2027-04-04" },
+            { classe: "1 PLP/MSPC", debut: "2027-03-08", fin: "2027-03-28" },
+            { classe: "1 MELEC", debut: "2027-03-22", fin: "2027-04-18" },
+            { classe: "1 CIEL", debut: "2027-03-22", fin: "2027-04-18" },
+            { classe: "2 MCC Gr1", debut: "2027-03-29", fin: "2027-04-18" },
+            { classe: "2 MPMIA", debut: "2027-04-05", fin: "2027-04-18" },
+            { classe: "2 TNE 1", debut: "2027-05-03", fin: "2027-05-23" },
+            { classe: "2 MCC Gr2", debut: "2027-05-03", fin: "2027-05-20" },
+            { classe: "1 PLP/MSPC", debut: "2027-05-03", fin: "2027-05-23" },
+            { classe: "2 TNE 2", debut: "2027-05-24", fin: "2027-06-13" },
+            { classe: "2 TNE 3", debut: "2027-05-24", fin: "2027-06-13" },
+            { classe: "2 MPMIA", debut: "2027-05-31", fin: "2027-06-13" },
+            { classe: "1 MCC", debut: "2027-05-31", fin: "2027-06-27" },
+        ];
+
+        let currentDate = new Date(2026, 8, 1);
+
+        const allClasses = new Set();
+        pfmpData.forEach(entry => allClasses.add(entry.classe.trim()));
+        const classesArray = Array.from(allClasses).sort();
+
+        const classColors = {};
+        classesArray.forEach((className, index) => {
+            classColors[className] = `color-${index % 8}`;
+        });
+
+        const filterContainer = document.getElementById('filter-container');
+        classesArray.forEach(className => {
+            const label = document.createElement('label');
+            label.className = 'filter-label';
+            label.innerHTML = `<input type="checkbox" value="${className}" checked> ${className}`;
+            filterContainer.appendChild(label);
+        });
+
+        function dateToString(d) {
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            const monthDisplay = document.getElementById('month-display');
+            grid.innerHTML = '';
+
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            monthDisplay.textContent = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' }).format(currentDate);
+
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const emptyDaysBefore = firstDayIndex === 0 ? 6 : firstDayIndex - 1; 
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            const activeClasses = Array.from(document.querySelectorAll('.filter-label input:checked')).map(cb => cb.value);
+
+            for (let i = 0; i < emptyDaysBefore; i++) {
+                const emptyBox = document.createElement('div');
+                emptyBox.className = 'day-box empty';
+                grid.appendChild(emptyBox);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const currentDayDate = new Date(year, month, day);
+                const currentDayStr = dateToString(currentDayDate);
+                const dayOfWeek = currentDayDate.getDay();
+
+                const dayBox = document.createElement('div');
+                dayBox.className = 'day-box';
+                
+                const dateNumber = document.createElement('div');
+                dateNumber.className = 'date-number';
+                dateNumber.textContent = day;
+                dayBox.appendChild(dateNumber);
+
+                classesArray.forEach(className => {
+                    if (!activeClasses.includes(className)) return;
+
+                    const activeEvent = pfmpData.find(e => e.classe === className && currentDayStr >= e.debut && currentDayStr <= e.fin);
+
+                    if (activeEvent) {
+                        const isStart = currentDayStr === activeEvent.debut;
+                        const isEnd = currentDayStr === activeEvent.fin;
+                        const isMonday = dayOfWeek === 1; 
+                        const showText = isStart || isMonday;
+
+                        const eventBar = document.createElement('div');
+                        eventBar.className = `event-bar ${classColors[className]}`;
+                        
+                        if (isStart) eventBar.classList.add('event-start');
+                        else if (isEnd) eventBar.classList.add('event-end');
+                        else eventBar.classList.add('event-middle');
+
+                        if (showText) {
+                            eventBar.innerHTML = `<span class="event-text">${className}</span>`;
+                        }
+
+                        dayBox.appendChild(eventBar);
+                    }
+                });
+
+                grid.appendChild(dayBox);
+            }
+
+            const totalCells = emptyDaysBefore + daysInMonth;
+            const emptyDaysAfter = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+            
+            for (let i = 0; i < emptyDaysAfter; i++) {
+                const emptyBox = document.createElement('div');
+                emptyBox.className = 'day-box empty';
+                grid.appendChild(emptyBox);
+            }
+        }
+
+        document.querySelectorAll('.filter-label input').forEach(checkbox => {
+            checkbox.addEventListener('change', renderCalendar);
+        });
+
+        document.getElementById('prev-month').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        });
+
+        document.getElementById('next-month').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        });
+
+        renderCalendar();
+    </script>
+</body>
+</html>

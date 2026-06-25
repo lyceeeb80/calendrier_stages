@@ -39,7 +39,7 @@
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: -1px;
-            margin-bottom: 0; /* Aligné par le conteneur */
+            margin-bottom: 0;
             text-align: center;
         }
 
@@ -80,6 +80,25 @@
             text-transform: uppercase;
             border-bottom: 3px solid var(--border-color);
             padding-bottom: 10px;
+        }
+
+        .filters-toggle-all {
+            width: 100%;
+            background: var(--header-bg);
+            border: 3px solid var(--border-color);
+            padding: 8px 10px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-bottom: 16px;
+            box-shadow: 3px 3px 0px var(--border-color);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .filters-toggle-all:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0px 0px 0px var(--border-color);
         }
 
         .filter-label {
@@ -142,6 +161,34 @@
             font-size: 1.8rem;
             font-weight: 900;
             text-transform: uppercase;
+        }
+
+        /* --- Sélecteur de vue (Mois / Année) --- */
+        .view-toggle {
+            display: flex;
+            border: 3px solid var(--border-color);
+            box-shadow: 3px 3px 0px var(--border-color);
+            overflow: hidden;
+        }
+
+        .view-toggle button {
+            background: #fff;
+            border: none;
+            padding: 8px 16px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .view-toggle button:not(:last-child) {
+            border-right: 3px solid var(--border-color);
+        }
+
+        .view-toggle button.active {
+            background-color: #2196F3;
+            color: #fff;
         }
 
         /* --- Grille des jours --- */
@@ -235,6 +282,248 @@
             padding-left: 8px;
         }
 
+        /* --- Vue Annuelle (frise Gantt zoomable) --- */
+        .year-view {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .year-scroll-area {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .year-inner {
+            display: flex;
+            flex-direction: column;
+            width: max-content;
+            min-width: 100%;
+        }
+
+        .year-months-header {
+            display: flex;
+            border-bottom: 3px solid var(--border-color);
+            background-color: var(--header-bg);
+            position: sticky;
+            top: 0;
+            z-index: 3;
+        }
+
+        .year-corner-cell {
+            flex: 0 0 200px;
+            padding: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            border-right: 3px solid var(--border-color);
+            position: sticky;
+            left: 0;
+            background-color: var(--header-bg);
+            z-index: 4;
+        }
+
+        .year-months-track {
+            flex: 1 1 auto;
+            display: flex;
+            position: relative;
+        }
+
+        .year-month-name {
+            flex: 1 1 0;
+            padding: 10px 4px;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            text-align: center;
+            border-right: 1px solid #ccc;
+        }
+
+        .year-month-name:last-child {
+            border-right: none;
+        }
+
+        .year-row {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            min-height: 38px;
+            align-items: center;
+        }
+
+        .year-row:last-child {
+            border-bottom: 3px solid var(--border-color);
+        }
+
+        .year-row:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .year-row-label {
+            flex: 0 0 200px;
+            padding: 8px 12px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border-right: 3px solid var(--border-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: sticky;
+            left: 0;
+            background-color: inherit;
+            z-index: 2;
+        }
+
+        .year-row-swatch {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            border: 2px solid var(--border-color);
+        }
+
+        .year-row-track {
+            position: relative;
+            flex: 1 1 auto;
+            height: 26px;
+            display: flex;
+        }
+
+        .year-month-cell {
+            flex: 1 1 0;
+            border-right: 1px solid #eee;
+            height: 100%;
+        }
+
+        .year-month-cell:last-child {
+            border-right: none;
+        }
+
+        .year-event-bar {
+            position: absolute;
+            top: 2px;
+            height: 22px;
+            border-top: 2px solid var(--border-color);
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: #000;
+            white-space: nowrap;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .year-event-bar.event-start {
+            border-left: 2px solid var(--border-color);
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+        }
+
+        .year-event-bar.event-end {
+            border-right: 2px solid var(--border-color);
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+        }
+
+        .year-event-bar .event-text {
+            padding-left: 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .year-today-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #e91e63;
+            z-index: 2;
+        }
+
+        /* --- Barre de zoom horizontale (style timeline) --- */
+        .zoom-bar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 20px;
+            background-color: var(--header-bg);
+            border-top: 3px solid var(--border-color);
+        }
+
+        .zoom-bar-icon {
+            font-weight: 900;
+            font-size: 0.9rem;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .zoom-bar-icon.small {
+            font-size: 0.7rem;
+        }
+
+        .zoom-slider-track {
+            position: relative;
+            flex: 1 1 auto;
+            height: 10px;
+            background-color: #fff;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+        }
+
+        .zoom-slider-fill {
+            position: absolute;
+            top: -2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #2196F3;
+            border-right: 2px solid var(--border-color);
+            pointer-events: none;
+        }
+
+        .zoom-slider-handle {
+            position: absolute;
+            top: 50%;
+            width: 18px;
+            height: 26px;
+            background-color: #fff;
+            border: 3px solid var(--border-color);
+            transform: translate(-50%, -50%);
+            cursor: grab;
+            box-shadow: 2px 2px 0px var(--border-color);
+        }
+
+        .zoom-slider-handle:active {
+            cursor: grabbing;
+        }
+
+        .zoom-percent {
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            width: 48px;
+            text-align: right;
+        }
+
+        .zoom-reset-btn {
+            background: #fff;
+            border: 3px solid var(--border-color);
+            padding: 6px 12px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 2px 2px 0px var(--border-color);
+        }
+
+        .zoom-reset-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px var(--border-color);
+        }
+
         /* Palette de couleurs */
         .color-0 { background-color: #FF5252; }
         .color-1 { background-color: #448AFF; }
@@ -257,6 +546,20 @@
                 transform: none;
                 margin-bottom: 15px;
             }
+            .calendar-header {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+            .year-corner-cell,
+            .year-row-label {
+                flex: 0 0 130px;
+            }
+            .zoom-bar {
+                padding: 12px 14px;
+            }
+            .zoom-bar-icon {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -270,13 +573,19 @@
     <div class="container">
         <div class="filters">
             <h2>Formations</h2>
-            <div id="filter-container"></div>
+            <button id="toggle-all-filters" class="filters-toggle-all">Tout décocher</button>
+            <div id="filter-container">
+                </div>
         </div>
 
         <div class="calendar-wrapper">
             <div class="calendar-header">
                 <button id="prev-month">&laquo; Précédent</button>
                 <h2 id="month-display">Septembre 2026</h2>
+                <div class="view-toggle">
+                    <button id="view-month" class="active">Mois</button>
+                    <button id="view-year">Année</button>
+                </div>
                 <button id="next-month">Suivant &raquo;</button>
             </div>
             
@@ -291,69 +600,83 @@
             </div>
 
             <div class="calendar-grid" id="calendar-grid"></div>
+            <div class="year-view" id="year-view" style="display:none;">
+                <div class="year-scroll-area" id="year-scroll-area">
+                    <div class="year-inner" id="year-inner">
+                        <div class="year-months-header" id="year-months-header"></div>
+                        <div id="year-rows"></div>
+                    </div>
+                </div>
+                <div class="zoom-bar">
+                    <span class="zoom-bar-icon small">&#9651;</span>
+                    <div class="zoom-slider-track" id="zoom-slider-track">
+                        <div class="zoom-slider-fill" id="zoom-slider-fill"></div>
+                        <div class="zoom-slider-handle" id="zoom-slider-handle"></div>
+                    </div>
+                    <span class="zoom-bar-icon">&#9651;&#9651;</span>
+                    <span class="zoom-percent" id="zoom-percent">100%</span>
+                    <button class="zoom-reset-btn" id="zoom-reset-btn">Réinitialiser</button>
+                </div>
+            </div>
         </div>
     </div>
+
     <script>
-        const pfmpData = [
-            { classe: "T CIEL", debut: "2026-09-28", fin: "2026-10-18" },
-            { classe: "T MELEC", debut: "2026-09-28", fin: "2026-10-18" },
-            { classe: "T MCC Gr1", debut: "2026-09-28", fin: "2026-10-18" },
-            { classe: "T PLP/MSPC", debut: "2026-09-28", fin: "2026-10-18" },
-            { classe: "2 MCC Gr2", debut: "2026-11-02", fin: "2026-11-22" },
-            { classe: "1 CIEL", debut: "2026-11-09", fin: "2026-11-29" },
-            { classe: "1 PLP/MSPC", debut: "2026-11-09", fin: "2026-11-22" },
-            { classe: "T MCC", debut: "2026-11-30", fin: "2026-12-20" },
-            { classe: "T CIEL", debut: "2026-11-30", fin: "2026-12-20" },
-            { classe: "T MELEC", debut: "2026-11-30", fin: "2026-12-20" },
-            { classe: "T PLP/MSPC", debut: "2026-11-30", fin: "2026-12-20" },
-            { classe: "2 TNE 1", debut: "2027-01-25", fin: "2027-02-07" },
-            { classe: "2 MCC Gr1", debut: "2027-01-04", fin: "2027-01-17" },
-            { classe: "2 MCC Gr2", debut: "2027-01-18", fin: "2027-01-31" },
-            { classe: "1 MELEC Gr1", debut: "2027-01-11", fin: "2027-01-31" },
-            { classe: "1 MCC Gr1", debut: "2027-01-25", fin: "2027-02-21" },
-            { classe: "1 MELEC Gr2", debut: "2027-02-01", fin: "2027-02-21" },
-            { classe: "2 MPMIA", debut: "2027-02-01", fin: "2027-01-14" },
-            { classe: "2 TNE 2", debut: "2027-03-08", fin: "2027-03-21" },
-            { classe: "2 TNE 3", debut: "2027-03-08", fin: "2027-03-21" },
-            { classe: "1 MCC Gr2", debut: "2027-03-08", fin: "2027-04-04" },
-            { classe: "1 PLP/MSPC", debut: "2027-03-08", fin: "2027-03-28" },
-            { classe: "1 MELEC", debut: "2027-03-22", fin: "2027-04-18" },
-            { classe: "1 CIEL", debut: "2027-03-22", fin: "2027-04-18" },
-            { classe: "2 MCC Gr1", debut: "2027-03-29", fin: "2027-04-18" },
-            { classe: "2 MPMIA", debut: "2027-04-05", fin: "2027-04-18" },
-            { classe: "2 TNE 1", debut: "2027-05-03", fin: "2027-05-23" },
-            { classe: "2 MCC Gr2", debut: "2027-05-03", fin: "2027-05-20" },
-            { classe: "1 PLP/MSPC", debut: "2027-05-03", fin: "2027-05-23" },
-            { classe: "2 TNE 2", debut: "2027-05-24", fin: "2027-06-13" },
-            { classe: "2 TNE 3", debut: "2027-05-24", fin: "2027-06-13" },
-            { classe: "2 MPMIA", debut: "2027-05-31", fin: "2027-06-13" },
-            { classe: "1 MCC", debut: "2027-05-31", fin: "2027-06-27" },
-        ];
+        let pfmpData = [];
+        let classesArray = [];
+        let classColors = {};
 
         let currentDate = new Date(2026, 8, 1);
+        let currentView = 'month'; // 'month' ou 'year'
 
-        const allClasses = new Set();
-        pfmpData.forEach(entry => allClasses.add(entry.classe.trim()));
-        const classesArray = Array.from(allClasses).sort();
+        // 1. Récupération du fichier JSON externe
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                pfmpData = data;
+                initialiserApplication();
+            })
+            .catch(error => {
+                console.error("Erreur lors du chargement de data.json :", error);
+                document.getElementById('calendar-grid').innerHTML = "<p style='padding:20px; font-weight:bold; color:red;'>Erreur : Impossible de charger les données. Vérifiez que le fichier data.json est bien présent à côté du fichier HTML.</p>";
+            });
 
-        const classColors = {};
-        classesArray.forEach((className, index) => {
-            classColors[className] = `color-${index % 8}`;
-        });
+        // 2. Initialisation une fois les données chargées
+        function initialiserApplication() {
+            const allClasses = new Set();
+            pfmpData.forEach(entry => allClasses.add(entry.classe.trim()));
+            classesArray = Array.from(allClasses).sort();
 
-        const filterContainer = document.getElementById('filter-container');
-        classesArray.forEach(className => {
-            const label = document.createElement('label');
-            label.className = 'filter-label';
-            label.innerHTML = `<input type="checkbox" value="${className}" checked> ${className}`;
-            filterContainer.appendChild(label);
-        });
+            classesArray.forEach((className, index) => {
+                classColors[className] = `color-${index % 8}`;
+            });
+
+            const filterContainer = document.getElementById('filter-container');
+            filterContainer.innerHTML = ''; // Nettoyer au cas où
+            classesArray.forEach(className => {
+                const label = document.createElement('label');
+                label.className = 'filter-label';
+                label.innerHTML = `<input type="checkbox" value="${className}" checked> ${className}`;
+                filterContainer.appendChild(label);
+            });
+
+            // Ajouter les écouteurs d'événements sur les nouveaux filtres
+            document.querySelectorAll('.filter-label input').forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    updateToggleAllLabel();
+                    render();
+                });
+            });
+
+            // Lancer le premier affichage
+            render();
+        }
 
         function dateToString(d) {
             return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         }
 
-        function renderCalendar() {
+        function renderMonth() {
             const grid = document.getElementById('calendar-grid');
             const monthDisplay = document.getElementById('month-display');
             grid.innerHTML = '';
@@ -427,21 +750,310 @@
             }
         }
 
-        document.querySelectorAll('.filter-label input').forEach(checkbox => {
-            checkbox.addEventListener('change', renderCalendar);
+        const monthNamesShort = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
+
+        function isLeapYear(y) {
+            return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
+        }
+
+        function daysInYear(y) {
+            return isLeapYear(y) ? 366 : 365;
+        }
+
+        function dayOfYearClipped(dateStr, year) {
+            const d = new Date(dateStr + 'T00:00:00');
+            if (d.getFullYear() < year) return 0;
+            if (d.getFullYear() > year) return daysInYear(year);
+            const start = new Date(year, 0, 1);
+            return Math.round((d - start) / 86400000);
+        }
+
+        function renderYear() {
+            const monthsHeader = document.getElementById('year-months-header');
+            const rowsContainer = document.getElementById('year-rows');
+            const monthDisplay = document.getElementById('month-display');
+            const yearInner = document.getElementById('year-inner');
+            monthsHeader.innerHTML = '';
+            rowsContainer.innerHTML = '';
+
+            const year = currentDate.getFullYear();
+            monthDisplay.textContent = year;
+
+            const activeClasses = Array.from(document.querySelectorAll('.filter-label input:checked')).map(cb => cb.value);
+            const totalDays = daysInYear(year);
+
+            const scrollAreaWidth = document.getElementById('year-scroll-area').clientWidth || 900;
+            const labelWidth = window.innerWidth <= 1000 ? 130 : 200;
+            const baseTrackWidth = Math.max(scrollAreaWidth - labelWidth, 300);
+            const trackWidth = baseTrackWidth * yearZoom;
+            yearInner.style.width = `${trackWidth + labelWidth}px`;
+
+            const corner = document.createElement('div');
+            corner.className = 'year-corner-cell';
+            corner.textContent = 'Formation';
+            monthsHeader.appendChild(corner);
+
+            const monthsTrack = document.createElement('div');
+            monthsTrack.className = 'year-months-track';
+
+            monthNamesShort.forEach(name => {
+                const cell = document.createElement('div');
+                cell.className = 'year-month-name';
+                cell.textContent = name;
+                monthsTrack.appendChild(cell);
+            });
+
+            monthsHeader.appendChild(monthsTrack);
+
+            const visibleClasses = classesArray.filter(c => activeClasses.includes(c));
+
+            if (visibleClasses.length === 0) {
+                const emptyRow = document.createElement('div');
+                emptyRow.style.padding = '20px';
+                emptyRow.style.fontWeight = '700';
+                emptyRow.textContent = 'Aucune formation sélectionnée.';
+                rowsContainer.appendChild(emptyRow);
+                return;
+            }
+
+            visibleClasses.forEach(className => {
+                const row = document.createElement('div');
+                row.className = 'year-row';
+
+                const label = document.createElement('div');
+                label.className = 'year-row-label';
+                label.title = className;
+
+                const swatch = document.createElement('div');
+                swatch.className = `year-row-swatch ${classColors[className]}`;
+                label.appendChild(swatch);
+
+                const labelText = document.createElement('span');
+                labelText.textContent = className;
+                label.appendChild(labelText);
+
+                row.appendChild(label);
+
+                const track = document.createElement('div');
+                track.className = 'year-row-track';
+
+                for (let m = 0; m < 12; m++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'year-month-cell';
+                    track.appendChild(cell);
+                }
+
+                const events = pfmpData.filter(e => e.classe === className);
+                events.forEach(ev => {
+                    const evStartYear = new Date(ev.debut + 'T00:00:00').getFullYear();
+                    const evEndYear = new Date(ev.fin + 'T00:00:00').getFullYear();
+                    if (evEndYear < year || evStartYear > year) return;
+
+                    const startDay = dayOfYearClipped(ev.debut, year);
+                    const endDay = dayOfYearClipped(ev.fin, year) + 1; 
+
+                    const leftPct = (startDay / totalDays) * 100;
+                    const widthPct = ((endDay - startDay) / totalDays) * 100;
+
+                    const bar = document.createElement('div');
+                    bar.className = `year-event-bar ${classColors[className]}`;
+                    bar.style.left = `${leftPct}%`;
+                    bar.style.width = `${widthPct}%`;
+                    bar.title = `${className} : du ${ev.debut} au ${ev.fin}`;
+
+                    const realStart = ev.debut >= `${year}-01-01` && ev.debut <= `${year}-12-31`;
+                    const realEnd = ev.fin >= `${year}-01-01` && ev.fin <= `${year}-12-31`;
+                    if (realStart) bar.classList.add('event-start');
+                    if (realEnd) bar.classList.add('event-end');
+
+                    const span = document.createElement('span');
+                    span.className = 'event-text';
+                    const formatCompact = (dateStr) => {
+                        const d = new Date(dateStr + 'T00:00:00');
+                        const dd = String(d.getDate()).padStart(2, '0');
+                        const mm = String(d.getMonth() + 1).padStart(2, '0');
+                        return `${dd}/${mm}`;
+                    };
+                    span.textContent = `${formatCompact(ev.debut)}→${formatCompact(ev.fin)}`;
+                    bar.appendChild(span);
+
+                    bar.addEventListener('click', () => {
+                        currentDate = new Date(ev.debut + 'T00:00:00');
+                        setView('month');
+                    });
+
+                    track.appendChild(bar);
+                });
+
+                row.appendChild(track);
+                rowsContainer.appendChild(row);
+            });
+
+            const today = new Date();
+            if (today.getFullYear() === year) {
+                const todayDayNum = dayOfYearClipped(dateToString(today), year);
+                const leftPct = (todayDayNum / totalDays) * 100;
+                document.querySelectorAll('.year-row-track').forEach(track => {
+                    const line = document.createElement('div');
+                    line.className = 'year-today-line';
+                    line.style.left = `${leftPct}%`;
+                    line.title = "Aujourd'hui";
+                    track.appendChild(line);
+                });
+            }
+        }
+
+        const ZOOM_MIN = 1;
+        const ZOOM_MAX = 8; 
+        let yearZoom = 1;
+
+        function updateZoomUI() {
+            const pct = Math.round((yearZoom - ZOOM_MIN) / (ZOOM_MAX - ZOOM_MIN) * 100);
+            document.getElementById('zoom-slider-fill').style.width = `${pct}%`;
+            document.getElementById('zoom-slider-handle').style.left = `${pct}%`;
+            document.getElementById('zoom-percent').textContent = `${Math.round(yearZoom * 100)}%`;
+        }
+
+        function setYearZoom(newZoom, anchorRatio) {
+            const scrollArea = document.getElementById('year-scroll-area');
+            const prevScrollWidth = document.getElementById('year-inner').scrollWidth || 1;
+            const ratio = anchorRatio !== undefined ? anchorRatio : (scrollArea.scrollLeft + scrollArea.clientWidth / 2) / prevScrollWidth;
+
+            yearZoom = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, newZoom));
+            updateZoomUI();
+            renderYear();
+
+            const newScrollWidth = document.getElementById('year-inner').scrollWidth || 1;
+            scrollArea.scrollLeft = ratio * newScrollWidth - scrollArea.clientWidth / 2;
+        }
+
+        function initZoomBar() {
+            const track = document.getElementById('zoom-slider-track');
+            const handle = document.getElementById('zoom-slider-handle');
+
+            function zoomFromClientX(clientX) {
+                const rect = track.getBoundingClientRect();
+                let pct = (clientX - rect.left) / rect.width;
+                pct = Math.min(1, Math.max(0, pct));
+                const newZoom = ZOOM_MIN + pct * (ZOOM_MAX - ZOOM_MIN);
+                setYearZoom(newZoom);
+            }
+
+            track.addEventListener('click', (e) => {
+                if (e.target === handle) return;
+                zoomFromClientX(e.clientX);
+            });
+
+            let dragging = false;
+            handle.addEventListener('mousedown', (e) => {
+                dragging = true;
+                e.preventDefault();
+            });
+            window.addEventListener('mousemove', (e) => {
+                if (!dragging) return;
+                zoomFromClientX(e.clientX);
+            });
+            window.addEventListener('mouseup', () => { dragging = false; });
+
+            handle.addEventListener('touchstart', (e) => {
+                dragging = true;
+            }, { passive: true });
+            window.addEventListener('touchmove', (e) => {
+                if (!dragging) return;
+                zoomFromClientX(e.touches[0].clientX);
+            }, { passive: true });
+            window.addEventListener('touchend', () => { dragging = false; });
+
+            document.getElementById('zoom-reset-btn').addEventListener('click', () => {
+                setYearZoom(1, 0);
+                document.getElementById('year-scroll-area').scrollLeft = 0;
+            });
+
+            updateZoomUI();
+        }
+
+        function initWheelScroll() {
+            const scrollArea = document.getElementById('year-scroll-area');
+            scrollArea.addEventListener('wheel', (e) => {
+                if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                    e.preventDefault();
+                    scrollArea.scrollLeft += e.deltaY;
+                }
+            }, { passive: false });
+        }
+
+        function render() {
+            const monthGrid = document.getElementById('calendar-grid');
+            const daysHeader = document.getElementById('days-header');
+            const yearView = document.getElementById('year-view');
+
+            if (currentView === 'month') {
+                monthGrid.style.display = '';
+                daysHeader.style.display = '';
+                yearView.style.display = 'none';
+                renderMonth();
+            } else {
+                monthGrid.style.display = 'none';
+                daysHeader.style.display = 'none';
+                yearView.style.display = '';
+                renderYear();
+            }
+        }
+
+        function setView(view) {
+            currentView = view;
+            document.getElementById('view-month').classList.toggle('active', view === 'month');
+            document.getElementById('view-year').classList.toggle('active', view === 'year');
+            render();
+        }
+
+        const toggleAllBtn = document.getElementById('toggle-all-filters');
+
+        function updateToggleAllLabel() {
+            const allChecked = Array.from(document.querySelectorAll('.filter-label input')).every(cb => cb.checked);
+            toggleAllBtn.textContent = allChecked ? 'Tout décocher' : 'Tout cocher';
+        }
+
+        toggleAllBtn.addEventListener('click', () => {
+            const allChecked = Array.from(document.querySelectorAll('.filter-label input')).every(cb => cb.checked);
+            const newState = !allChecked;
+            document.querySelectorAll('.filter-label input').forEach(cb => cb.checked = newState);
+            updateToggleAllLabel();
+            render();
         });
 
         document.getElementById('prev-month').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalendar();
+            if (currentView === 'month') {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+            } else {
+                currentDate.setFullYear(currentDate.getFullYear() - 1);
+            }
+            render();
         });
 
         document.getElementById('next-month').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            renderCalendar();
+            if (currentView === 'month') {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+            } else {
+                currentDate.setFullYear(currentDate.getFullYear() + 1);
+            }
+            render();
         });
 
-        renderCalendar();
+        document.getElementById('view-month').addEventListener('click', () => setView('month'));
+        document.getElementById('view-year').addEventListener('click', () => setView('year'));
+
+        initZoomBar();
+        initWheelScroll();
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                if (currentView === 'year') renderYear();
+            }, 150);
+        });
+
     </script>
 </body>
 </html>

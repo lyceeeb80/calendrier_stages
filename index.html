@@ -524,15 +524,42 @@
             box-shadow: 0px 0px 0px var(--border-color);
         }
 
-        /* Palette de couleurs */
-        .color-0 { background-color: #FF5252; }
-        .color-1 { background-color: #448AFF; }
-        .color-2 { background-color: #FFEB3B; }
-        .color-3 { background-color: #69F0AE; }
-        .color-4 { background-color: #E040FB; }
-        .color-5 { background-color: #FF9800; }
-        .color-6 { background-color: #18FFFF; }
-        .color-7 { background-color: #F48FB1; }
+        /* Palette de couleurs par filière */
+        .color-ciel { background-color: #FF5252; }
+        .color-melec { background-color: #448AFF; }
+        .color-mcc { background-color: #FFEB3B; }
+        .color-plpmspc { background-color: #69F0AE; }
+        .color-tne { background-color: #E040FB; }
+        .color-mpmia { background-color: #FF9800; }
+        .color-autre { background-color: #B0BEC5; }
+
+        /* --- Groupes de filières dans le panneau de filtres --- */
+        .filiere-group {
+            margin-bottom: 18px;
+        }
+
+        .filiere-group-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 900;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .filiere-group-swatch {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            border: 2px solid var(--border-color);
+        }
+
+        .filiere-group .filter-label {
+            margin-left: 4px;
+        }
 
         @media (max-width: 1000px) {
             .container { flex-direction: column; }
@@ -641,23 +668,118 @@
                 document.getElementById('calendar-grid').innerHTML = "<p style='padding:20px; font-weight:bold; color:red;'>Erreur : Impossible de charger les données. Vérifiez que le fichier data.json est bien présent à côté du fichier HTML.</p>";
             });
 
+        // --- Palette de couleurs fixe pour les filières connues ---
+        // Pour ajouter une filière : il suffit de mettre son nom dans le champ
+        // "filiere" de data.json. Si elle n'est pas dans cette palette, une
+        // couleur lui sera attribuée automatiquement (voir colorForFiliere).
+        const filierePalette = {
+            'CIEL':     'color-ciel',
+            'MELEC':    'color-melec',
+            'MCC':      'color-mcc',
+            'PLP/MSPC': 'color-plpmspc',
+            'TNE':      'color-tne',
+            'MPMIA':    'color-mpmia'
+        };
+
+        // Couleurs de secours pour toute filière non répertoriée dans filierePalette.
+        // Une même filière (même nom) reçoit toujours la même couleur de secours.
+        const fallbackPalette = [
+            '#26A69A', '#7E57C2', '#EC407A', '#9CCC65',
+            '#FFB300', '#5C6BC0', '#8D6E63', '#42A5F5'
+        ];
+        const fallbackColorCache = {};
+
+        function colorForFiliere(filiereName) {
+            if (filierePalette[filiereName]) return filierePalette[filiereName];
+
+            if (!fallbackColorCache[filiereName]) {
+                // Hash simple du nom pour choisir une couleur stable dans fallbackPalette
+                let hash = 0;
+                for (let i = 0; i < filiereName.length; i++) {
+                    hash = (hash * 31 + filiereName.charCodeAt(i)) >>> 0;
+                }
+                const hexColor = fallbackPalette[hash % fallbackPalette.length];
+                const className = `color-auto-${filiereName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+
+                // Injection dynamique de la classe CSS correspondante
+                const styleEl = document.createElement('style');
+                styleEl.textContent = `.${className} { background-color: ${hexColor}; }`;
+                document.head.appendChild(styleEl);
+
+                fallbackColorCache[filiereName] = className;
+            }
+            return fallbackColorCache[filiereName];
+        }
+
+        // Ordre de niveau pour le tri à l'intérieur d'une filière : 1 < 2 < T
+        function niveauOrder(className) {
+            if (/^T\b/i.test(className)) return 2;
+            if (/^2\b/.test(className)) return 1;
+            if (/^1\b/.test(className)) return 0;
+            return 3;
+        }
+
         // 2. Initialisation une fois les données chargées
         function initialiserApplication() {
-            const allClasses = new Set();
-            pfmpData.forEach(entry => allClasses.add(entry.classe.trim()));
-            classesArray = Array.from(allClasses).sort();
-
-            classesArray.forEach((className, index) => {
-                classColors[className] = `color-${index % 8}`;
+            // Association classe -> filière, lue directement depuis data.json
+            const classeToFiliere = {};
+            pfmpData.forEach(entry => {
+                const className = entry.classe.trim();
+                const filiere = (entry.filiere || 'Autre').trim();
+                classeToFiliere[className] = filiere;
             });
 
-            const filterContainer = document.getElementById('filter-container');
-            filterContainer.innerHTML = ''; // Nettoyer au cas où
+            const allClasses = Object.keys(classeToFiliere);
+
+            // Liste des filières présentes, triées par ordre alphabétique
+            const filieresPresentes = Array.from(new Set(Object.values(classeToFiliere))).sort((a, b) => a.localeCompare(b));
+
+            // Tri des classes : par filière (ordre alphabétique), puis par niveau (1, 2, T), puis alphabétique
+            const filiereOrderIndex = (filiereName) => filieresPresentes.indexOf(filiereName);
+
+            classesArray = allClasses.sort((a, b) => {
+                const fa = filiereOrderIndex(classeToFiliere[a]);
+                const fb = filiereOrderIndex(classeToFiliere[b]);
+                if (fa !== fb) return fa - fb;
+                const na = niveauOrder(a);
+                const nb = niveauOrder(b);
+                if (na !== nb) return na - nb;
+                return a.localeCompare(b);
+            });
+
             classesArray.forEach(className => {
-                const label = document.createElement('label');
-                label.className = 'filter-label';
-                label.innerHTML = `<input type="checkbox" value="${className}" checked> ${className}`;
-                filterContainer.appendChild(label);
+                classColors[className] = colorForFiliere(classeToFiliere[className]);
+            });
+
+            // Construction des filtres groupés par filière
+            const filterContainer = document.getElementById('filter-container');
+            filterContainer.innerHTML = '';
+
+            filieresPresentes.forEach(filiereName => {
+                const classesInFiliere = classesArray.filter(c => classeToFiliere[c] === filiereName);
+                if (classesInFiliere.length === 0) return;
+
+                const group = document.createElement('div');
+                group.className = 'filiere-group';
+
+                const title = document.createElement('div');
+                title.className = 'filiere-group-title';
+                const swatch = document.createElement('div');
+                swatch.className = `filiere-group-swatch ${colorForFiliere(filiereName)}`;
+                title.appendChild(swatch);
+                const titleText = document.createElement('span');
+                titleText.textContent = filiereName;
+                title.appendChild(titleText);
+                group.appendChild(title);
+
+                classesInFiliere.forEach(className => {
+                    const label = document.createElement('label');
+                    label.className = 'filter-label';
+                    label.innerHTML = `<input type="checkbox" value="${className}" checked> ${className}`;
+                    group.appendChild(label);
+                });
+
+                filterContainer.appendChild(group);
             });
 
             // Ajouter les écouteurs d'événements sur les nouveaux filtres

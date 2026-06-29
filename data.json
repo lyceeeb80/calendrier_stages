@@ -196,5 +196,88 @@
     "filiere": "MCC",
     "debut": "2027-05-31",
     "fin": "2027-06-27"
-  }
+  },
+   {
+    "classe": "2TS CCST",
+    "filiere": "CCST",
+    "debut": "2026-10-05",
+    "fin": "2026-10-18"
+  },
+  {
+    "classe": "2TS CCST",
+    "filiere": "CCST",
+    "debut": "2026-11-06",
+    "fin": "2026-11-06"
+  },
+    {
+    "classe": "2TS CCST",
+    "filiere": "CCST",
+    "debut": "2026-11-13",
+    "fin": "2026-11-13"
+  },
+   {
+    "classe": "2TS CCST",
+    "filiere": "CCST",
+    "debut": "2026-11-20,
+    "fin": "2026-11-20"
+  },
+   {
+    "classe": "2TS CCST",
+    "filiere": "CCST",
+    "debut": "2026-11-27,
+    "fin": "2026-11-27"
+  },
+   {
+    "classe": "2TS CCST",
+    "filiere": "CCST",
+    "debut": "2026-12-04,
+    "fin": "2026-12-04"
+  },
+   {
+    "classe": "2TS CCST",
+    "filiere": "CCST",
+    "debut": "2026-12-11,
+    "fin": "2026-12-11"
+  },
+   {
+    "classe": "2TS CCST",
+    "filiere": "CCST",
+    "debut": "2026-12-18,
+    "fin": "2026-12-18"
+  },
+    {
+    "classe": "2TS CCST",
+    "filiere": "CCST",
+    "debut": "2026-01-04,
+    "fin": "2026-01-24"
+  }, 
+  {
+    "classe": "2TS CCST",
+    "filiere": "CCST",
+    "debut": "2026-01-29,
+    "fin": "2026-01-29"
+  }, {
+    "classe": "2TS CCST",
+    "filiere": "CCST",
+    "debut": "2026-02-05,
+    "fin": "2026-02-05"
+  },
+  {
+    "classe": "2TS CCST",
+    "filiere": "CCST",
+    "debut": "2026-02-12,
+    "fin": "2026-02-12"
+  },
+  {
+    "classe": "2TS CCST",
+    "filiere": "CCST",
+    "debut": "2026-02-19,
+    "fin": "2026-02-19"
+  },
+  {
+    "classe": "2TS CCST",
+    "filiere": "CCST",
+    "debut": "2026-03-22,
+    "fin": "2026-03-28"
+  },
 ]

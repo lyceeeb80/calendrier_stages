@@ -328,5 +328,24 @@
     "filiere": "MS",
     "debut": "2027-06-07",
     "fin": "2027-06-30"
+  },
+    {
+    "classe": "DNMADE 3",
+    "filiere": "DNMADE",
+    "debut": "2026-09-28",
+    "fin": "2027-10-25"
+  },
+   {
+    "classe": "DNMADE 1",
+    "filiere": "DNMADE",
+    "debut": "2027-02-08",
+    "fin": "2027-02-21"
+  },
+   {
+    "classe": "DNMADE 2",
+    "filiere": "DNMADE",
+    "debut": "2027-04-19",
+    "fin": "2027-07-11"
   }
+  
 ]

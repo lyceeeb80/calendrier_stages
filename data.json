@@ -280,5 +280,53 @@
     "filiere": "CCST",
     "debut": "2027-03-22",
     "fin": "2027-03-28"
+  },
+   {
+    "classe": "2TS MS-A",
+    "filiere": "MS",
+    "debut": "2026-12-01",
+    "fin": "2026-12-20"
+  },
+   {
+    "classe": "1TS CCST",
+    "filiere": "CCST",
+    "debut": "2027-01-04",
+    "fin": "2027-01-24"
+  },
+   {
+    "classe": "2TS MS-A",
+    "filiere": "MS",
+    "debut": "2027-02-08",
+    "fin": "2027-02-21"
+  },
+   {
+    "classe": "1TS MMV",
+    "filiere": "MMV",
+    "debut": "2027-05-17",
+    "fin": "2027-07-04"
+  },
+  {
+    "classe": "1TS MS-C",
+    "filiere": "MS",
+    "debut": "2027-05-10",
+    "fin": "2027-07-04"
+  },
+  {
+    "classe": "1TS CIEL A&B",
+    "filiere": "CIEL",
+    "debut": "2027-05-10",
+    "fin": "2027-07-04"
+  },
+  {
+    "classe": "1TS CCST",
+    "filiere": "CCST",
+    "debut": "2027-05-24",
+    "fin": "2027-06-25"
+  },
+  {
+    "classe": "1TS MS-A",
+    "filiere": "MS",
+    "debut": "2027-06-07",
+    "fin": "2027-06-30"
   }
 ]
